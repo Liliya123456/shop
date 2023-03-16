@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="category")
+/**
+ * Java doc
+ */
 public class Category {
     @Id
     private Long id;

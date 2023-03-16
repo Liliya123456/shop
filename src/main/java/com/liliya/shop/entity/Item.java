@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "items")
+/**
+ * Java doc
+ */
 public class Item {
     @Id
     private Long id;

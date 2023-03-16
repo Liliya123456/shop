@@ -7,6 +7,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
+/**
+ * java doc
+ */
 public class User {
     @Id
     private String id;
