@@ -10,10 +10,10 @@ import javax.persistence.Table;
 public class User {
     @Id
     private String id;
-    @Column
+    @Column(name ="display_name")
     private String displayName;
     @Column
-    private String adress;
+    private String address;
     @Column
     private String phone;
 
@@ -34,12 +34,12 @@ public class User {
         this.displayName = displayName;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getPhone() {

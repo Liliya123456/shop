@@ -7,7 +7,7 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name="categories")
+@Table(name="category")
 public class Category {
     @Id
     private Long id;
