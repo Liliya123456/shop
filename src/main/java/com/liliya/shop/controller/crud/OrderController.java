@@ -32,7 +32,10 @@ public class OrderController {
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public Order update(@RequestBody Order order, @PathVariable(required = true) Long id) {
-        return order;
+        if (!id.equals(order.getId())) {
+            throw new IllegalArgumentException("Id is not match!");
+        }
+        return orderRepository.save(order);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
