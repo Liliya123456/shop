@@ -7,7 +7,7 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name="category")
+@Table(name = "category")
 /**
  * Java doc
  */
