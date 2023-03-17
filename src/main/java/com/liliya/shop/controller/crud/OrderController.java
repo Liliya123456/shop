@@ -4,9 +4,7 @@ import com.liliya.shop.entity.Order;
 import com.liliya.shop.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,19 +20,23 @@ public class OrderController {
         return orderRepository.findAll();
     }
 
-    public Order createOrder(Order order) {
+    @RequestMapping(path = "/new", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public Order createOrder(@RequestBody Order order) {
         return order;
     }
 
-    public Order readById(Long id) {
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    public Order readById(@PathVariable(required = true) Long id) {
         return null;
     }
 
-    public Order update(Order order) {
+    @RequestMapping(path = "/{id}", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public Order update(@RequestBody Order order, @PathVariable(required = true) Long id) {
         return order;
     }
 
-    public void deleteOrder(Long id) {
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public void deleteOrder(@PathVariable(required = true) Long id) {
 
     }
 
