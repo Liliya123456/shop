@@ -17,7 +17,7 @@ public class Item {
     private String description;
     @Column
     private BigDecimal price;
-    @ManyToOne(cascade = {CascadeType.ALL}, optional = false)
+    @ManyToOne(cascade = {CascadeType.ALL}, optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 
