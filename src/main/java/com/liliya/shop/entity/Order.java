@@ -7,6 +7,7 @@ import java.util.List;
 @Table(name = "orders")
 public class Order {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(cascade = {CascadeType.ALL}, optional = false)
     @JoinColumn(name = "user_id")
