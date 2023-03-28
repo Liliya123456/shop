@@ -13,15 +13,16 @@ public class SecurityConfig {
     public SecurityFilterChain security(HttpSecurity http) throws Exception{
         http.authorizeRequests()
                 //права доступа
-                .antMatchers("/api/order/**").hasRole("ADMIN")
+                .antMatchers("/api/orders/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET,"/api/**").permitAll()
-                .antMatchers("/api/**").authenticated()
-                .anyRequest().permitAll()
+                .antMatchers("/api/**").permitAll()
+               .anyRequest().permitAll()
                 .and().formLogin().disable()
                 .httpBasic().disable()
                 .cors().disable()
                 .csrf().disable();
         return http.build();
-
     }
+
+
 }
