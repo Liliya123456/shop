@@ -1,7 +1,7 @@
 package com.liliya.shop.controller.crud;
 
-import com.liliya.shop.entity.User;
-import com.liliya.shop.repository.UserRepository;
+import com.liliya.shop.entity.Category;
+import com.liliya.shop.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -9,39 +9,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping(path = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/category", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
-public class UserController {
+public class CategoryController {
     @Autowired
-    private UserRepository userRepository;
+    private CategoryRepository categoryRepository;
 
     @GetMapping(path = {"/", ""})
-    public List<User> userList() {
-        return userRepository.findAll();
+    public List<Category> categoryList() {
+        return categoryRepository.findAll();
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public Optional<User> readById(@PathVariable(required = true) String id) {
-        return userRepository.findById(id);
+    public Optional<Category> readById(@PathVariable(required = true) Long id) {
+        return categoryRepository.findById(id);
     }
 
     @RequestMapping(path = "/new", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public User createUser(@RequestBody User user) {
-        return user;
+    public Category createCategory(@RequestBody Category category) {
+        return categoryRepository.save(category);
+
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public User update(@RequestBody User user, @PathVariable(required = true) String id) {
-        if (!id.equals(user.getId())) {
+    public Category update(@RequestBody Category category, @PathVariable(required = true) Long id) {
+        if (!id.equals(category.getId())) {
             throw new IllegalArgumentException("Id is not match!");
         }
-        return userRepository.save(user);
+        return categoryRepository.save(category);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable(required = true) String id) {
+    public void deleteCategory(@PathVariable(required = true) Long id) {
 
     }
-
-
 }
