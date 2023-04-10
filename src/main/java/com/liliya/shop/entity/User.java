@@ -1,5 +1,6 @@
 package com.liliya.shop.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
@@ -7,9 +8,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-/**
- * java doc
- */
 public class User {
     @Id
     private String id;
@@ -19,6 +17,9 @@ public class User {
     private String address;
     @Column
     private String phone;
+    @Column
+    @JsonIgnore
+    private String password;
     @ElementCollection
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
@@ -55,6 +56,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Set<String> getRoles() {
