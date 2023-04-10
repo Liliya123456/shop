@@ -35,5 +35,12 @@ CREATE TABLE item_in_order
     PRIMARY KEY(order_id,item_id),
     FOREIGN KEY(order_id) REFERENCES orders (id)  on delete CASCADE,
     FOREIGN KEY(item_id) REFERENCES items (id) on delete RESTRICT
-)
+);
+CREATE TABLE roles (
+	user_id VARCHAR(100) NOT NULL,
+	role VARCHAR(50) NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users (id) on delete CASCADE,
+	PRIMARY KEY (user_id,role)
+);
+
 

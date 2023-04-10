@@ -1,9 +1,9 @@
 package com.liliya.shop.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -19,7 +19,11 @@ public class User {
     private String address;
     @Column
     private String phone;
-
+    @ElementCollection
+    @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Set<String> roles;
 
     public String getId() {
         return id;
@@ -51,5 +55,13 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 }
