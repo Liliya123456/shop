@@ -40,8 +40,11 @@ public class SecurityConfig {
     private void configureAuthorization(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
         config
                 //права доступа
-                .antMatchers("/api/order/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/login", "/logout").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/item/**", "/api/category/**", "/api/user/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/user/new").permitAll()
+                .antMatchers("/api/item/**", "/api/category/**").hasRole("ADMIN")
+                //TODO  разобраться с правами
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
                 .and();
@@ -73,11 +76,13 @@ public class SecurityConfig {
     public AuthenticationFailureHandler noopAuthenticationFailureHandler() {
         return new AuthenticationEntryPointFailureHandler(defaultEntryPoint());
     }
+
     @Bean
     public AuthenticationSuccessHandler noopAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
         };
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
