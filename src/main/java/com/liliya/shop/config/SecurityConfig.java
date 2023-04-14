@@ -9,11 +9,8 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
@@ -56,6 +53,7 @@ public class SecurityConfig {
                 .successHandler(noopAuthenticationSuccessHandler())
                 .failureHandler(noopAuthenticationFailureHandler());
     }
+
     private void configureLogout(LogoutConfigurer<HttpSecurity> config) {
         config
                 .logoutUrl(null)
@@ -75,28 +73,11 @@ public class SecurityConfig {
     public AuthenticationFailureHandler noopAuthenticationFailureHandler() {
         return new AuthenticationEntryPointFailureHandler(defaultEntryPoint());
     }
-
     @Bean
     public AuthenticationSuccessHandler noopAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
         };
     }
-
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails user = User.withUsername("user")
-                .password(passwordEncoder.encode("password"))
-                .roles("USER")
-                .build();
-
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder.encode("admin"))
-                .roles("USER", "ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(user, admin);
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
