@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class RepositoryUserDetailsService implements UserDetailsService {
   @Autowired
-  private UserRepository accountRepository;
+  private UserRepository userRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return accountRepository
+    return userRepository
         .findById(username)
         .map(account -> User.builder()
             .username(account.getId())

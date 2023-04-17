@@ -3,24 +3,27 @@ package com.liliya.shop.controller.crud;
 import com.liliya.shop.entity.Order;
 import com.liliya.shop.repository.OrderRepository;
 import com.liliya.shop.service.OrderService;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-//CRUD
-@RequestMapping(path = "/api/order", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
-public class OrderController {
+@RequestMapping(path = "/api/cart", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CartController {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
     private OrderService orderService;
 
     @GetMapping(path = {"/", ""})
-    public List<Order> listOrders() {
+    public List<Order> listOrders(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails user) {
+        System.out.println(user);
         return orderService.listOrders();
     }
 
@@ -44,6 +47,5 @@ public class OrderController {
         orderService.deleteOrder(id);
 
     }
-
 
 }

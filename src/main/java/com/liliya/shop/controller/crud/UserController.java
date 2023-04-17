@@ -20,12 +20,12 @@ public class UserController {
 
     @GetMapping(path = {"/", ""})
     public List<User> userList() {
-        return userRepository.findAll();
+        return userService.userList();
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public Optional<User> readById(@PathVariable(required = true) String id) {
-        return userRepository.findById(id);
+        return userService.readById(id);
     }
 
     @RequestMapping(path = "/new", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
@@ -42,7 +42,7 @@ public class UserController {
         if (!id.equals(user.getId())) {
             throw new IllegalArgumentException("Id is not match!");
         }
-        return userRepository.save(user);
+        return userService.update(user);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
