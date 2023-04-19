@@ -25,12 +25,12 @@ public class UserService {
     }
 
     public User createNewUser(User user) {
-        Optional<User> userById = userRepository.findById(user.getId());
-        if (userById.isPresent()) {
+        if (user.getPassword() == null || user.getPassword().equals("")) {
+            throw new IllegalArgumentException("Empty password"); //TODO Respond with 400
+        } else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         }
-        throw new IllegalArgumentException("Coudnt find an user");
     }
 
     public User update(User user) {
@@ -50,10 +50,10 @@ public class UserService {
     //TODO выдает ошибку при удалении
     public void deleteUser(String id) {
         Optional<User> userById = userRepository.findById(id);
-        if (userById == null) {
-            throw new IllegalArgumentException("Did not find user");
+        if (userById.isPresent()) {
+            userRepository.deleteById(id);
 
-        } else userRepository.deleteById(id);
+        } else throw new IllegalArgumentException("Did not find user");
 
     }
 
