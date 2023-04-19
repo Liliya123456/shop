@@ -18,7 +18,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping(path = {"/", ""})
+    @GetMapping(path = {""})
     public List<User> userList() {
         return userService.userList();
     }

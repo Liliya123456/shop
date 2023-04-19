@@ -19,7 +19,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping(path = {"/", ""})
+    @GetMapping(path = {""})
     public List<Order> listOrders() {
         return orderService.listOrders();
     }

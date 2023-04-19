@@ -18,7 +18,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping(path = {"/", ""})
+    @GetMapping(path = {""})
     public List<Category> categoryList() {
         return categoryService.categoryList();
     }
