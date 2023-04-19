@@ -23,6 +23,7 @@ public class ItemService {
 
     // TODO проверка на существование!!
     public Item createItem(Item item) {
+
 //        Optional<Item> itemById = itemRepository.findById(item.getId());
 //        if (itemById.isPresent()) {
 //            throw new IllegalArgumentException("Item is exist!");
@@ -40,12 +41,15 @@ public class ItemService {
 
     }
 
-    //TODO выдает исключение
     public void deleteItem(Long id) {
         Optional<Item> itemById = itemRepository.findById(id);
         if (itemById.isPresent()) {
             itemRepository.deleteById(id);
         } else throw new IllegalArgumentException("Item doesnt exist!");
+    }
+
+    public boolean isNameFree(String newName) {
+        return itemRepository.findByName(newName).isEmpty();
     }
 
 }

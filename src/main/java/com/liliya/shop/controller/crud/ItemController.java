@@ -30,12 +30,19 @@ public class ItemController {
 
     @RequestMapping(path = "/new", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public Item createItem(@RequestBody Item item) {
-        return itemService.createItem(item);
+        if (itemService.isNameFree(item.getName())) {
+            return itemService.createItem(item);
+        }
+        throw new IllegalArgumentException("Name exist!");
+
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public Item update(@RequestBody Item item, @PathVariable(required = true) Long id) {
-        return itemService.updateItem(item, id);
+        if (itemService.isNameFree(item.getName())) {
+            return itemService.updateItem(item, id);
+        }
+        throw new IllegalArgumentException("Name exist!");
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)

@@ -17,7 +17,7 @@ public class Item {
     private String description;
     @Column
     private BigDecimal price;
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST,CascadeType.REMOVE}, optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 
