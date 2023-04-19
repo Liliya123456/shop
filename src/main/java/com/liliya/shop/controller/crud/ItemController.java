@@ -35,11 +35,12 @@ public class ItemController {
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public Item update(@RequestBody Item item, @PathVariable(required = true) Long id) {
-        return itemService.updateItem(item,id);
+        return itemService.updateItem(item, id);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public void deleteItem(@PathVariable(required = true) Long id) {
+        itemService.deleteItem(id);
 
     }
 

@@ -24,7 +24,7 @@ public class CartController {
     @GetMapping(path = {"/", ""})
     public List<Order> listOrders(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails user) {
         System.out.println(user);
-        return orderService.listOrders();
+        return orderRepository.findByUserId(user.getUsername());
     }
 
     @RequestMapping(path = "/new", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
