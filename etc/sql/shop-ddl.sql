@@ -26,7 +26,7 @@ CREATE TABLE orders
     id SERIAL PRIMARY KEY,
     status VARCHAR(30) not null default 'open',
     user_id VARCHAR(100) not null,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) on delete CASCADE
 );
 CREATE TABLE item_in_order
 (
