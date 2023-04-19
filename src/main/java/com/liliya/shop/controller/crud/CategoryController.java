@@ -2,6 +2,7 @@ package com.liliya.shop.controller.crud;
 
 import com.liliya.shop.entity.Category;
 import com.liliya.shop.repository.CategoryRepository;
+import com.liliya.shop.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,33 +15,32 @@ import java.util.Optional;
 public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping(path = {"/", ""})
     public List<Category> categoryList() {
-        return categoryRepository.findAll();
+        return categoryService.categoryList();
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public Optional<Category> readById(@PathVariable(required = true) Long id) {
-        return categoryRepository.findById(id);
+        return categoryService.readById(id);
     }
 
     @RequestMapping(path = "/new", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public Category createCategory(@RequestBody Category category) {
-        return categoryRepository.save(category);
+        return categoryService.createCategory(category);
 
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public Category update(@RequestBody Category category, @PathVariable(required = true) Long id) {
-        if (!id.equals(category.getId())) {
-            throw new IllegalArgumentException("Id is not match!");
-        }
-        return categoryRepository.save(category);
+        return categoryService.update(category, id);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public void deleteCategory(@PathVariable(required = true) Long id) {
-
+        categoryService.deleteCategory(id);
     }
 }
