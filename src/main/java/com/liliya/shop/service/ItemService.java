@@ -21,14 +21,8 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
-    // TODO проверка на существование!!
     public Item createItem(Item item) {
-
-//        Optional<Item> itemById = itemRepository.findById(item.getId());
-//        if (itemById.isPresent()) {
-//            throw new IllegalArgumentException("Item is exist!");
-//        }
-
+        item.setId(null);
         return itemRepository.save(item);
     }
 

@@ -47,7 +47,6 @@ public class UserService {
         throw new IllegalArgumentException("Did not find user");
     }
 
-    //TODO выдает ошибку при удалении
     public void deleteUser(String id) {
         Optional<User> userById = userRepository.findById(id);
         if (userById.isPresent()) {
