@@ -18,7 +18,7 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
-    @GetMapping(path = {""})
+    @GetMapping(path = {"/", ""})
     public List<Item> itemList() {
         return itemService.itemList();
     }

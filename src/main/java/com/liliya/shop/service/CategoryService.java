@@ -24,13 +24,10 @@ public class CategoryService {
 
     public Category createCategory(Category category) {
         return categoryRepository.save(category);
-
     }
 
     public Category update(Category category, Long id) {
-
         Optional<Category> categoryById = categoryRepository.findById(category.getId());
-
         if (categoryById.isPresent()) {
             return categoryRepository.save(category);
         } else throw new IllegalArgumentException("Id is not match!");
@@ -39,9 +36,9 @@ public class CategoryService {
     public void deleteCategory(@PathVariable(required = true) Long id) {
 
         Optional<Category> categoryById = categoryRepository.findById(id);
-
         if (categoryById.isPresent()) {
             categoryRepository.deleteById(id);
         } else throw new IllegalArgumentException("Id doesnt exist!");
     }
+
 }

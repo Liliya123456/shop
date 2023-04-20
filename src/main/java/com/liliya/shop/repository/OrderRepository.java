@@ -10,8 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @Query("select a from Order a where a.id =?1")
+    @Query("select a from Order a where a.user.id =?1")
     List<Order> findByUserId(String id);
+
     @Query("select a from Order a where a.user.id =?1 and a.id =?2")
     Optional<Order> findByUserIdAndId(String usersId, Long id );
 }
