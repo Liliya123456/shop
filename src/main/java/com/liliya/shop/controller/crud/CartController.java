@@ -45,22 +45,20 @@ public class CartController {
         User dbUser = userRepository.findById(email).get();
         order.setId(null);
         order.setUser(dbUser);
+        isItemExist(order);
         return orderRepository.save(order);
     }
-//TODO doesnt work. null value in column "password" of relation "users" violates not-null constraint
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public Order readById(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails user, @PathVariable(required = true) Long id) {
+    public Order findOrderById(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails user, @PathVariable(required = true) Long id) {
         String email = user.getUsername();
         Optional<Order> order = orderRepository.findByUserIdAndId(email, id);
         if (order.isPresent()) {
             return order.get();
         } else
-            throw new IllegalArgumentException("Did not find user");
-
+            throw new IllegalArgumentException("Did not find order");
     }
 
-    //TODO не работает ERROR: null value in column "password" of relation "users" violates not-null constraint
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public Order update(@RequestBody Order order, @PathVariable(required = true) Long id, @Parameter(hidden = true) @AuthenticationPrincipal UserDetails user) {
         String email = user.getUsername();
@@ -70,19 +68,20 @@ public class CartController {
             order.setUser(dbOrder.get().getUser());
 
             //TODO выделить проверку по товарам в отдельнеый метод  и добавть в создание.
-            if (order.getItems() == null) {
-                order.setItems(new ArrayList<>(0));
-            } else {
-                List<Item> items = itemRepository.findAllById(getAllid(order.getItems()));
-                if (order.getItems().size() != items.size()) {
-                    throw new IllegalArgumentException("All items must exist");
-                } else {
-                    order.setItems(items);
-                }
-            }
+//            if (order.getItems() == null) {
+//                order.setItems(new ArrayList<>(0));
+//            } else {
+//                List<Item> items = itemRepository.findAllById(getAllid(order.getItems()));
+//                if (order.getItems().size() != items.size()) {
+//                    throw new IllegalArgumentException("All items must exist");
+//                } else {
+//                    order.setItems(items);
+//                }
+//            }
+            isItemExist(order);
             return orderRepository.save(order);
         } else
-            throw new IllegalArgumentException("Did not find user or order");
+            throw new IllegalArgumentException("Did not find  order");
     }
 
     private List<Long> getAllid(List<Item> items) {
@@ -93,17 +92,30 @@ public class CartController {
         return result;
     }
 
-    //TODO ругается на удаление но удаляет
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public void deleteOrder(@PathVariable(required = true) Long id, @Parameter(hidden = true) @AuthenticationPrincipal UserDetails user) {
-        String userId = user.getUsername();
-        Optional<User> userById = userRepository.findById(userId);
-        if (userById.isPresent()) {
-            orderRepository.deleteById(id);
+    private Order isItemExist(Order order) {
+        if (order.getItems() == null) {
+            order.setItems(new ArrayList<>(0));
+        } else {
+            List<Item> items = itemRepository.findAllById(getAllid(order.getItems()));
+            if (order.getItems().size() != items.size()) {
+                throw new IllegalArgumentException("All items must exist");
+            } else {
+                order.setItems(items);
+            }
         }
-        throw new IllegalArgumentException("Did not find user or order");
-
+        return order;
     }
 
-
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public void deleteOrder(@PathVariable(required = true) Long id, @Parameter(hidden = true) @AuthenticationPrincipal UserDetails user) {
+        String email = user.getUsername();
+        Optional<Order> order = orderRepository.findByUserIdAndId(email, id);
+        if (order.isPresent()) {
+            orderRepository.deleteById(id);
+        } else
+            throw new IllegalArgumentException("Did not find order");
+    }
 }
+
+
+
