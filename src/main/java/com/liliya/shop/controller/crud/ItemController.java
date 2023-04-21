@@ -3,9 +3,13 @@ package com.liliya.shop.controller.crud;
 import com.liliya.shop.entity.Item;
 import com.liliya.shop.repository.ItemRepository;
 import com.liliya.shop.service.ItemService;
+import org.springdoc.api.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +37,7 @@ public class ItemController {
         if (itemService.isNameFree(item.getName())) {
             return itemService.createItem(item);
         }
-        throw new IllegalArgumentException("Name exist!");
+        throw new NotFoundException("Name exist!");
 
     }
 
@@ -42,7 +46,7 @@ public class ItemController {
         if (itemService.isNameFree(item.getName())) {
             return itemService.updateItem(item, id);
         }
-        throw new IllegalArgumentException("Name exist!");
+        throw new NotFoundException("Name exist!");
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
@@ -50,6 +54,4 @@ public class ItemController {
         itemService.deleteItem(id);
 
     }
-
-
 }

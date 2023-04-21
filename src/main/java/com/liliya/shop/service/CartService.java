@@ -6,15 +6,15 @@ import com.liliya.shop.entity.User;
 import com.liliya.shop.repository.ItemRepository;
 import com.liliya.shop.repository.OrderRepository;
 import com.liliya.shop.repository.UserRepository;
-import io.swagger.v3.oas.annotations.Parameter;
+import org.springdoc.api.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.webjars.NotFoundException;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,22 +35,25 @@ public class CartService {
     public List<Order> listOrders(UserDetails user) {
         return orderRepository.findByUserId(user.getUsername());
     }
-    public Order createOrder( Order order, UserDetails user) {
+
+    public Order createOrder(Order order, UserDetails user) {
         String email = user.getUsername();
         User dbUser = userRepository.findById(email).get();
         order.setId(null);
         order.setUser(dbUser);
         return orderRepository.save(isItemExist(order));
     }
+
     public Order findOrderById(UserDetails user, Long id) {
         String email = user.getUsername();
         Optional<Order> order = orderRepository.findByUserIdAndId(email, id);
         if (order.isPresent()) {
             return order.get();
         } else
-            throw new IllegalArgumentException("Did not find order");
+            throw new NotFoundException("Did not find order");
     }
-    public Order update(Order order, Long id,  UserDetails user) {
+
+    public Order update(Order order, Long id, UserDetails user) {
         String email = user.getUsername();
         Optional<Order> dbOrder = orderRepository.findByUserIdAndId(email, id);
         if (dbOrder.isPresent()) {
@@ -70,7 +73,7 @@ public class CartService {
 //            }
             return orderRepository.save(isItemExist(order));
         } else
-            throw new IllegalArgumentException("Did not find  order");
+            throw new NotFoundException("Did not find  order");
     }
 
     public void deleteOrder(Long id, UserDetails user) {
@@ -79,7 +82,7 @@ public class CartService {
         if (order.isPresent()) {
             orderRepository.deleteById(id);
         } else
-            throw new IllegalArgumentException("Did not find order");
+            throw new NotFoundException("Count find the order!");
     }
 
 
@@ -97,13 +100,14 @@ public class CartService {
         } else {
             List<Item> items = itemRepository.findAllById(getAllid(order.getItems()));
             if (order.getItems().size() != items.size()) {
-                throw new IllegalArgumentException("All items must exist");
+                throw new NotFoundException("All items must exist");
             } else {
                 order.setItems(items);
             }
         }
         return order;
     }
+
 
 
 
