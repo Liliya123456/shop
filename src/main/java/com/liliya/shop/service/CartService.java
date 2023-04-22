@@ -6,13 +6,9 @@ import com.liliya.shop.entity.User;
 import com.liliya.shop.repository.ItemRepository;
 import com.liliya.shop.repository.OrderRepository;
 import com.liliya.shop.repository.UserRepository;
-import org.springdoc.api.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.webjars.NotFoundException;
 
 import java.util.ArrayList;
@@ -36,57 +32,44 @@ public class CartService {
         return orderRepository.findByUserId(user.getUsername());
     }
 
-    public Order createOrder(Order order, UserDetails user) {
-        String email = user.getUsername();
-        User dbUser = userRepository.findById(email).get();
+    public Order createOrder(Order order, String username) {
+        User dbUser = userRepository.findById(username).get();
         order.setId(null);
         order.setUser(dbUser);
-        return orderRepository.save(isItemExist(order));
+        order.setItems(loadAndCountItems(getAllid(order.getItems())));
+        return orderRepository.save(order);
     }
 
-    public Order findOrderById(UserDetails user, Long id) {
-        String email = user.getUsername();
-        Optional<Order> order = orderRepository.findByUserIdAndId(email, id);
+    public Order findOrderById(Long id, String username) {
+        Optional<Order> order = orderRepository.findByUserIdAndId(username, id);
         if (order.isPresent()) {
             return order.get();
         } else
             throw new NotFoundException("Did not find order");
     }
 
-    public Order update(Order order, Long id, UserDetails user) {
-        String email = user.getUsername();
-        Optional<Order> dbOrder = orderRepository.findByUserIdAndId(email, id);
+    public Order update(Order order, Long id, String username) {
+        Optional<Order> dbOrder = orderRepository.findByUserIdAndId(username, id);
         if (dbOrder.isPresent()) {
             order.setId(id);
             order.setUser(dbOrder.get().getUser());
-
-            //TODO выделить проверку по товарам в отдельнеый метод  и добавть в создание.
-//            if (order.getItems() == null) {
-//                order.setItems(new ArrayList<>(0));
-//            } else {
-//                List<Item> items = itemRepository.findAllById(getAllid(order.getItems()));
-//                if (order.getItems().size() != items.size()) {
-//                    throw new IllegalArgumentException("All items must exist");
-//                } else {
-//                    order.setItems(items);
-//                }
-//            }
-            return orderRepository.save(isItemExist(order));
+            order.setItems(loadAndCountItems(getAllid(order.getItems())));
+            return orderRepository.save(order);
         } else
             throw new NotFoundException("Did not find  order");
     }
 
-    public void deleteOrder(Long id, UserDetails user) {
-        String email = user.getUsername();
-        Optional<Order> order = orderRepository.findByUserIdAndId(email, id);
+    public void deleteOrder(Long id, String username) {
+        Optional<Order> order = orderRepository.findByUserIdAndId(username, id);
         if (order.isPresent()) {
             orderRepository.deleteById(id);
         } else
             throw new NotFoundException("Count find the order!");
     }
 
-
     private List<Long> getAllid(List<Item> items) {
+        if (items == null)
+            return new ArrayList<>(0);
         List<Long> result = new ArrayList<>(items.size());
         for (Item item : items) {
             result.add(item.getId());
@@ -94,21 +77,28 @@ public class CartService {
         return result;
     }
 
-    private Order isItemExist(Order order) {
-        if (order.getItems() == null) {
-            order.setItems(new ArrayList<>(0));
-        } else {
-            List<Item> items = itemRepository.findAllById(getAllid(order.getItems()));
-            if (order.getItems().size() != items.size()) {
-                throw new NotFoundException("All items must exist");
-            } else {
-                order.setItems(items);
-            }
+    //Стыд и позор
+//
+//    private Order isItemExist(Order order) {
+//        if (order.getItems() == null) {
+//            order.setItems(new ArrayList<>(0));
+//        } else {
+//            List<Item> items = itemRepository.findAllById(getAllid(order.getItems()));
+//            if (order.getItems().size() != items.size()) {
+//                throw new NotFoundException("All items must exist");
+//            } else {
+//                order.setItems(items);
+//            }
+//        }
+//        return order;
+//    }
+    private List<Item> loadAndCountItems(List<Long> ids) {
+        List<Item> items = itemRepository.findAllById(ids);
+        if (items.size() != ids.size()) {
+            throw new NotFoundException("All items must exist");
         }
-        return order;
+        return items;
     }
-
-
 
 
 }
