@@ -3,8 +3,10 @@ package com.liliya.shop.service;
 import com.liliya.shop.entity.User;
 import com.liliya.shop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +28,7 @@ public class UserService {
 
     public User createNewUser(User user) {
         if (user.getPassword() == null || user.getPassword().equals("")) {
-            throw new IllegalArgumentException("Empty password"); //TODO Respond with 400
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Empty password");
         } else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
@@ -39,12 +41,12 @@ public class UserService {
             if (user.getPassword() == null) {
                 user.setPassword(byId.get().getPassword());
             } else if (user.getPassword().equals("")) {
-                throw new IllegalArgumentException("Empty password"); //TODO Respond with 400
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Empty password");
             } else
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
-        }
-        throw new IllegalArgumentException("Did not find user");
+        } else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist");
     }
 
     public void deleteUser(String id) {
@@ -52,7 +54,8 @@ public class UserService {
         if (userById.isPresent()) {
             userRepository.deleteById(id);
 
-        } else throw new IllegalArgumentException("Did not find user");
+        } else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist");
 
     }
 

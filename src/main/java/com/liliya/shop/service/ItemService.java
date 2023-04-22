@@ -3,7 +3,9 @@ package com.liliya.shop.service;
 import com.liliya.shop.entity.Item;
 import com.liliya.shop.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +27,13 @@ public class ItemService {
         item.setId(null);
         return itemRepository.save(item);
     }
-
+//TODO  использовать id из пути
     public Item updateItem(Item item, Long id) {
         Optional<Item> itemById = itemRepository.findById(item.getId());
         if (itemById.isPresent()) {
             return itemRepository.save(item);
-        }
-        throw new IllegalArgumentException("Item doesnt exist!");
+        } else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item doesn't exist");
 
     }
 
@@ -39,7 +41,9 @@ public class ItemService {
         Optional<Item> itemById = itemRepository.findById(id);
         if (itemById.isPresent()) {
             itemRepository.deleteById(id);
-        } else throw new IllegalArgumentException("Item doesnt exist!");
+        } else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item doesn't exist");
+
     }
 
     public boolean isNameFree(String newName) {

@@ -2,14 +2,11 @@ package com.liliya.shop.service;
 
 import com.liliya.shop.entity.Category;
 import com.liliya.shop.repository.CategoryRepository;
-import org.springdoc.api.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.webjars.NotFoundException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,16 +23,17 @@ public class CategoryService {
     public Optional<Category> readById(Long id) {
         return categoryRepository.findById(id);
     }
-
+//TODO проверки на уникальность
     public Category createCategory(Category category) {
         return categoryRepository.save(category);
     }
 
+    //TODO использвать id
     public Category update(Category category, Long id) {
         Optional<Category> categoryById = categoryRepository.findById(category.getId());
         if (categoryById.isPresent()) {
             return categoryRepository.save(category);
-        } else throw new NotFoundException("Id is not match!");
+        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
     }
 
     public void deleteCategory(@PathVariable(required = true) Long id) {
@@ -43,9 +41,8 @@ public class CategoryService {
         Optional<Category> categoryById = categoryRepository.findById(id);
         if (categoryById.isPresent()) {
             categoryRepository.deleteById(id);
-        } else throw new NotFoundException("Id doesnt exist!");
+        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
     }
-
 
 
 }

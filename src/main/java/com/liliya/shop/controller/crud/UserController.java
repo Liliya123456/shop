@@ -1,12 +1,13 @@
 package com.liliya.shop.controller.crud;
 
 import com.liliya.shop.entity.User;
-import com.liliya.shop.exception.RequestIdMismatchException;
 import com.liliya.shop.repository.UserRepository;
 import com.liliya.shop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,8 +42,7 @@ public class UserController {
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public User update(@RequestBody User user, @PathVariable(required = true) String id) {
         if (!id.equals(user.getId())) {
-            //TODO 400 kod
-            throw new RequestIdMismatchException();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Body id doesn't match path id");
         }
         return userService.update(user);
     }

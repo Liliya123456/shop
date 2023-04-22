@@ -7,9 +7,10 @@ import com.liliya.shop.repository.ItemRepository;
 import com.liliya.shop.repository.OrderRepository;
 import com.liliya.shop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class CartService {
         if (order.isPresent()) {
             return order.get();
         } else
-            throw new NotFoundException("Did not find order");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Did not find order");
     }
 
     public Order update(Order order, Long id, String username) {
@@ -56,7 +57,7 @@ public class CartService {
             order.setItems(loadAndCountItems(getAllid(order.getItems())));
             return orderRepository.save(order);
         } else
-            throw new NotFoundException("Did not find  order");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Did not find order");
     }
 
     public void deleteOrder(Long id, String username) {
@@ -64,7 +65,7 @@ public class CartService {
         if (order.isPresent()) {
             orderRepository.deleteById(id);
         } else
-            throw new NotFoundException("Count find the order!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Did not find order");
     }
 
     private List<Long> getAllid(List<Item> items) {
@@ -95,7 +96,7 @@ public class CartService {
     private List<Item> loadAndCountItems(List<Long> ids) {
         List<Item> items = itemRepository.findAllById(ids);
         if (items.size() != ids.size()) {
-            throw new NotFoundException("All items must exist");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "All items must exist", new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
         }
         return items;
     }
