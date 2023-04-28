@@ -1,10 +1,8 @@
 package com.liliya.shop.controller.crud;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 public class AuthController {
     @RequestMapping(path = "/login", method = RequestMethod.POST)

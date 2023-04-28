@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 @RequestMapping(path = "/api/category", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class CategoryController {

@@ -14,11 +14,11 @@ public class OpenApiConfig {
                 .info(
                         new Info()
                                 .title("SpringShop API")
-                                .description("Spring boot sample application")
+                                .description("Spring boot sample application for internet shop")
                                 .version("v0.0.1")
                                 .license(new License()
-                                        .name("BSD 2-Clause License")
-                                        .url("http://springdoc.org")
+                                        .name("By Liliya")
+                                        .url("https://github.com/Liliya123456/shop")
                                 )
                 );
     }

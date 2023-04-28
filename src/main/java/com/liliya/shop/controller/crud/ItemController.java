@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
-
+@CrossOrigin
 @RequestMapping(path = "/api/item", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class ItemController {

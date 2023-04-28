@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 //CRUD
+@CrossOrigin
 @RequestMapping(path = "/api/order", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class OrderController {

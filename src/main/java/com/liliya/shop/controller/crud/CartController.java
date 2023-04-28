@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/api/cart", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CartController {
