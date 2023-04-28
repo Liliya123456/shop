@@ -78,21 +78,6 @@ public class CartService {
         return result;
     }
 
-    //Стыд и позор
-//
-//    private Order isItemExist(Order order) {
-//        if (order.getItems() == null) {
-//            order.setItems(new ArrayList<>(0));
-//        } else {
-//            List<Item> items = itemRepository.findAllById(getAllid(order.getItems()));
-//            if (order.getItems().size() != items.size()) {
-//                throw new NotFoundException("All items must exist");
-//            } else {
-//                order.setItems(items);
-//            }
-//        }
-//        return order;
-//    }
     private List<Item> loadAndCountItems(List<Long> ids) {
         List<Item> items = itemRepository.findAllById(ids);
         if (items.size() != ids.size()) {

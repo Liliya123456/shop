@@ -45,7 +45,6 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/api/user/new").permitAll()
                 .antMatchers("/api/item/**", "/api/category/**").hasRole("ADMIN")
                 .antMatchers("/api/cart/**").authenticated()
-                //TODO  разобраться с правами
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
                 .and();

@@ -27,14 +27,17 @@ public class ItemService {
         item.setId(null);
         return itemRepository.save(item);
     }
-//TODO  использовать id из пути
+
     public Item updateItem(Item item, Long id) {
         Optional<Item> itemById = itemRepository.findById(item.getId());
-        if (itemById.isPresent()) {
-            return itemRepository.save(item);
-        } else
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item doesn't exist");
-
+        if (!id.equals(item.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Body id doesn't match path id");
+        } else {
+            if (itemById.isPresent()) {
+                return itemRepository.save(item);
+            } else
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item doesn't exist");
+        }
     }
 
     public void deleteItem(Long id) {

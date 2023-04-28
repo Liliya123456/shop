@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findByName(String name);
 
-    //TODO  добавить второй параметр id  исключенного обхекта
+    //  добавить второй параметр id  исключенного обхекта
 }

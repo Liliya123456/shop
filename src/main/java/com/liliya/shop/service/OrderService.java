@@ -43,12 +43,16 @@ public class OrderService {
         return orderRepository.findById(id);
     }
 
-    //TODO проверка на существование
     public Order update(Order order, Long id) {
+        Optional<Order> orderById = orderRepository.findById(id);
         if (!id.equals(order.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Body id doesn't match path id");
+        } else {
+            if (orderById.isPresent()) {
+                return orderRepository.save(order);
+            } else
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Did not find order");
         }
-        return orderRepository.save(order);
     }
 
     public void deleteOrder(Long id) {

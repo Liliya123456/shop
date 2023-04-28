@@ -23,17 +23,24 @@ public class CategoryService {
     public Optional<Category> readById(Long id) {
         return categoryRepository.findById(id);
     }
-//TODO проверки на уникальность
+
     public Category createCategory(Category category) {
-        return categoryRepository.save(category);
+        Optional<Category> categoryByName = categoryRepository.findByName(category.getName());
+        if (categoryByName.isPresent()) {
+            return categoryRepository.save(category);
+        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category already exist");
+
     }
 
-    //TODO использвать id
     public Category update(Category category, Long id) {
         Optional<Category> categoryById = categoryRepository.findById(category.getId());
-        if (categoryById.isPresent()) {
-            return categoryRepository.save(category);
-        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+        if (!id.equals(category.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Body id doesn't match path id");
+        } else {
+            if (categoryById.isPresent()) {
+                return categoryRepository.save(category);
+            } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+        }
     }
 
     public void deleteCategory(@PathVariable(required = true) Long id) {
