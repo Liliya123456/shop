@@ -29,6 +29,16 @@ public class ItemService {
 
     public Item createItem(Item item) {
         item.setId(null);
+        Long categoryId = item.getCategory().getId();
+        Optional<Category> existingCategory = categoryRepository.findById(categoryId);
+        if (existingCategory.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category not found", new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+        } else {
+            item.setCategory(existingCategory.get());
+        }
+        if (!isNameFree(item.getName())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Name already exist");
+        }
         return itemRepository.save(item);
     }
 
