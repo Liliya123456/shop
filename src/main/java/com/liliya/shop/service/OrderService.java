@@ -44,14 +44,20 @@ public class OrderService {
         return orderRepository.findById(id);
     }
 
-    //TODO не работает обновление, работает не полностью
-    //TODO проверка на существование
     public Order update(Order order, Long id) {
         if (!id.equals(order.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Body id doesn't match path id");
         }
-        return orderRepository.save(order);
+        Optional<Order> dbOrder = orderRepository.findById(id);
+        if (dbOrder.isPresent()) {
+            order.setId(id);
+            order.setUser(dbOrder.get().getUser());
+            order.setItems(loadAndCountItems(getAllid(order.getItems())));
+            return orderRepository.save(order);
+        } else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Did not find order");
     }
+
 
     public void deleteOrder(Long id) {
         Optional<Order> order = orderRepository.findById(id);
