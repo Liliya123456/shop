@@ -51,7 +51,7 @@ public class OrderService {
         Optional<Order> dbOrder = orderRepository.findById(id);
         if (dbOrder.isPresent()) {
             order.setId(id);
-            order.setUser(dbOrder.get().getUser());
+            order.setUser(dbOrder.get().getUser()); //Не изменяем пользователя???
             order.setItems(loadAndCountItems(getAllid(order.getItems())));
             return orderRepository.save(order);
         } else

@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
-@CrossOrigin
+
 @RequestMapping(path = "/api/item", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class ItemController {
@@ -40,10 +40,7 @@ public class ItemController {
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public Item update(@RequestBody Item item, @PathVariable(required = true) Long id) {
-        if (itemService.isNameFree(item.getName())) {
-            return itemService.updateItem(item, id);
-        }
-        throw new ResponseStatusException(HttpStatus.CONFLICT, "Name exist!");
+        return itemService.updateItem(item, id);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
