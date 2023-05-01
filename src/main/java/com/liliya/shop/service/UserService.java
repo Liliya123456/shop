@@ -23,16 +23,26 @@ public class UserService {
     }
 
     public Optional<User> readById(String id) {
-        return userRepository.findById(id);
+        Optional<User> userById = userRepository.findById(id);
+        if (userById.isPresent()) {
+            return userRepository.findById(id);
+        } else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist");
+
     }
 
     public User createNewUser(User user) {
-        if (user.getPassword() == null || user.getPassword().equals("")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Empty password");
-        } else {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
-        }
+        Optional<User> byId = userRepository.findById(user.getId());
+        if (!byId.isPresent()) {
+            if (user.getPassword() == null || user.getPassword().equals("")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Empty password");
+            } else {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                return userRepository.save(user);
+            }
+
+        } else
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User alredy exist");
     }
 
     public User update(User user) {

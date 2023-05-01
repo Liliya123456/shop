@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/login", "/logout").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/item/**", "/api/category/**", "/api/user/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/user/new").permitAll()
-                .antMatchers("/api/item/**", "/api/category/**", "/api/order/**").hasRole("ADMIN")
+                .antMatchers("/api/item/**", "/api/category/**", "/api/order/**", "api/user/**").hasRole("ADMIN")
                 .antMatchers("/api/cart/**").authenticated()
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()

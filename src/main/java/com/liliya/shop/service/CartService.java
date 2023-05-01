@@ -50,14 +50,18 @@ public class CartService {
     }
 
     public Order update(Order order, Long id, String username) {
-        Optional<Order> dbOrder = orderRepository.findByUserIdAndId(username, id);
-        if (dbOrder.isPresent()) {
-            order.setId(id);
-            order.setUser(dbOrder.get().getUser());
-            order.setItems(loadAndCountItems(getAllid(order.getItems())));
-            return orderRepository.save(order);
-        } else
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Did not find order");
+        if (!id.equals(order.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Body id doesn't match path id");
+        } else {
+            Optional<Order> dbOrder = orderRepository.findByUserIdAndId(username, id);
+            if (dbOrder.isPresent()) {
+                order.setId(id);
+                order.setUser(dbOrder.get().getUser());
+                order.setItems(loadAndCountItems(getAllid(order.getItems())));
+                return orderRepository.save(order);
+            } else
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Did not find order");
+        }
     }
 
     public void deleteOrder(Long id, String username) {
