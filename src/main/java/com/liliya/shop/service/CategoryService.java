@@ -26,20 +26,26 @@ public class CategoryService {
 
     public Category createCategory(Category category) {
         Optional<Category> categoryByName = categoryRepository.findByName(category.getName());
-        if (categoryByName.isPresent()) {
+        if (!categoryByName.isPresent()) {
             return categoryRepository.save(category);
-        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category already exist");
-
+        } else
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Category already exist");
     }
 
     public Category update(Category category, Long id) {
-        Optional<Category> categoryById = categoryRepository.findById(category.getId());
         if (!id.equals(category.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Body id doesn't match path id");
         } else {
+            Optional<Category> categoryById = categoryRepository.findById(category.getId());
             if (categoryById.isPresent()) {
+                if (!category.getName().equals(categoryById.get().getName())) {
+                    if (!isNameFree(category.getName())) {
+                        throw new ResponseStatusException(HttpStatus.CONFLICT, "Name already exist");
+                    }
+                }
                 return categoryRepository.save(category);
-            } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+            } else
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
         }
     }
 
@@ -49,6 +55,10 @@ public class CategoryService {
         if (categoryById.isPresent()) {
             categoryRepository.deleteById(id);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+    }
+
+    private boolean isNameFree(String newName) {
+        return categoryRepository.findByName(newName).isEmpty();
     }
 
 
