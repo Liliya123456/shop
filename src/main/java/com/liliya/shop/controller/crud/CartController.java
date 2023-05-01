@@ -10,13 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@CrossOrigin
+
 @RestController
 @RequestMapping(path = "/api/cart", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CartController {
     @Autowired
     private CartService cartService;
-
 
     @GetMapping(path = {""})
     public List<Order> listOrders(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails user) {
